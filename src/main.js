@@ -10,6 +10,7 @@ var toastrConfigs = {
 }
 
 Vue.config.productionTip = false
+Vue.config.devtools = false
 
 Vue.use(CxltToastr, toastrConfigs)
 
