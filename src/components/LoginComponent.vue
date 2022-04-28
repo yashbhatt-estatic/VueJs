@@ -37,37 +37,47 @@
 </template>
 
 <script>
-import 'cxlt-vue2-toastr/dist/css/cxlt-vue2-toastr.css'
-import commonMixin from '../common/mixins'
+import 'cxlt-vue2-toastr/dist/css/cxlt-vue2-toastr.css';
+import commonMixin from '../common/mixins';
+import apiCall from '../common/apiCall';
 
-import axios from 'axios'
 export default {
-  name: "LoginComponent",
-  mixins: [commonMixin],
-  data () {
+  name: 'LoginComponent',
+  mixins: [commonMixin, apiCall],
+  data() {
     return {
       email: '',
-      password: ''
-    }
+      password: '',
+      response: null,
+    };
+  },
+  watch: {
+    responseData(response) {
+      this.redirectOnResponce(response);
+    },
   },
   methods: {
-    loginUser () {
-      console.log('loginUser', `${process.env.VUE_APP_API_URL}`)
+    redirectOnResponce: function(response) {
+        this.$toast.success({
+          title: 'Successfully',
+          message: response.data.email + ' logged in successfully',
+        });
+        localStorage.setItem('authenticated', true);
+        this.$router.push('/home');
+    },
+    loginUser: async function () {
+      let user = {
+        email: this.email,
+        password: this.password,
+      };
       if (this.email !== '' && this.password !== '') {
-        axios.post(process.env.VUE_APP_API_URL + '/login', {
-          email: this.email,
-          password: this.password
-        }).then(response => {
-          this.errorHandle(response)
-        }).catch(error => {
-          this.errorHandle(error)
-        })
+        await this.myAPICall(user);
       } else {
-        this.emptyFeild()
+        this.emptyFeild();
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
