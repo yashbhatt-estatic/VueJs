@@ -2,13 +2,6 @@
   <div id="app">
     <Header v-if="authenticated === 'true'" />
     <router-view />
-    <router-link
-      v-if="authenticated === 'true'"
-      to="/"
-      v-on:click.native="logout()"
-      replace
-      >Logout</router-link
-    >
   </div>
 </template>
 
@@ -29,23 +22,17 @@ export default {
   mounted() {
     this.authenticated = localStorage.getItem('authenticated');
     if (this.authenticated === 'true') {
-      if(window.location.pathname !== '/home') {
+      if (window.location.pathname !== '/home') {
         this.$router.push('/home');
       }
     } else {
-      if(window.location.pathname !== '/') {
+      if (window.location.pathname !== '/') {
         this.$router.push('/');
       }
     }
   },
   updated() {
     this.authenticated = localStorage.getItem('authenticated');
-  },
-  methods: {
-    logout() {
-      localStorage.clear();
-      this.authenticated = false;
-    },
   },
 };
 </script>
